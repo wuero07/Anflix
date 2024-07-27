@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Actividades adicionales -->
+
         <activity android:name=".WelcomeActivity" />
         <activity android:name=".MenuActivity" />
         <activity android:name=".PlayerActivity" />

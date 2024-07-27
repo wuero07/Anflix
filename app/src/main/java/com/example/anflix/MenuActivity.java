@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,9 +22,9 @@ public class MenuActivity extends AppCompatActivity {
 
     private TextView tvWelcomeMessage;
     private LinearLayout categoryCaricature, categoryAction, categoryHorror;
-    private UserRepository userRepository;
-
+    private Button btnChangeUser;
     private static final int REQUEST_CAMERA_PERMISSION = 1001;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,22 +35,28 @@ public class MenuActivity extends AppCompatActivity {
         categoryCaricature = findViewById(R.id.category_caricature);
         categoryAction = findViewById(R.id.category_action);
         categoryHorror = findViewById(R.id.category_horror);
+        btnChangeUser = findViewById(R.id.btnChangeUser);
 
-        userRepository = new UserRepository(this);
+        sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
 
         displayUserData();
         setupCategoryListeners();
+        setupChangeUserListener();
     }
 
     private void displayUserData() {
-        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
-        String name = sharedPreferences.getString("name", "Usuario");
-        int age = sharedPreferences.getInt("age", 0);
+        String userKey = sharedPreferences.getString("current_user_key", null);
+        if (userKey == null) {
+            tvWelcomeMessage.setText("Bienvenido, Usuario");
+            return;
+        }
+
+        String name = sharedPreferences.getString(userKey + "_name", "Usuario");
+        int age = sharedPreferences.getInt(userKey + "_age", 0);
+        String gender = sharedPreferences.getString(userKey + "_gender", "");
+        String photoPath = sharedPreferences.getString(userKey + "_photo", null);
 
         tvWelcomeMessage.setText("Bienvenido, " + name);
-
-
-        userRepository.insertUser(name, age, sharedPreferences.getString("gender", ""));
 
         if (age < 12) {
             categoryCaricature.setVisibility(View.VISIBLE);
@@ -63,44 +71,47 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void setupCategoryListeners() {
-        categoryCaricature.setOnClickListener(v -> showProfilePhotoDialog("caricature"));
-        categoryAction.setOnClickListener(v -> showProfilePhotoDialog("action"));
-        categoryHorror.setOnClickListener(v -> showProfilePhotoDialog("horror"));
+        categoryCaricature.setOnClickListener(v -> openPlayerActivity("caricature"));
+        categoryAction.setOnClickListener(v -> openPlayerActivity("action"));
+        categoryHorror.setOnClickListener(v -> openPlayerActivity("horror"));
     }
 
-    private void showProfilePhotoDialog(String category) {
-        new AlertDialog.Builder(this)
-                .setTitle("Foto de Perfil")
-                .setMessage("Debe tomar una foto de perfil antes de ver el video.")
-                .setPositiveButton("Aceptar", (dialog, which) -> requestCameraPermission(category))
-                .setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss())
-                .show();
+    private void setupChangeUserListener() {
+        btnChangeUser.setOnClickListener(v -> {
+            UserSelectionDialog dialog = new UserSelectionDialog();
+            dialog.show(getSupportFragmentManager(), "UserSelectionDialog");
+        });
     }
 
-    private void requestCameraPermission(String category) {
-        if (ContextCompat.checkSelfPermission(MenuActivity.this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MenuActivity.this,
-                    new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-        } else {
-            openCamera(category);
+    private void openPlayerActivity(String category) {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        String userKey = sharedPreferences.getString("current_user_key", null);
+        if (userKey == null) return;
+
+        String name = sharedPreferences.getString(userKey + "_name", "Usuario");
+        int age = sharedPreferences.getInt(userKey + "_age", 0);
+        String gender = sharedPreferences.getString(userKey + "_gender", "");
+        String photoPath = sharedPreferences.getString(userKey + "_photo", null);
+
+        Bitmap photo = null;
+        if (photoPath != null) {
+            photo = BitmapFactory.decodeFile(photoPath);
         }
-    }
 
-    private void openCamera(String category) {
-        Intent intent = new Intent(MenuActivity.this, CameraActivity.class);
+        Intent intent = new Intent(MenuActivity.this, PlayerActivity.class);
         intent.putExtra("category", category);
+        intent.putExtra("name", name);
+        intent.putExtra("age", age);
+        intent.putExtra("gender", gender);
+        intent.putExtra("photo", photo);
         startActivity(intent);
+
+
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                openCamera(getIntent().getStringExtra("category"));
-            }
-        }
+    public void goBackToMenu(View view) {
+        Intent intent = new Intent(MenuActivity.this, WelcomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

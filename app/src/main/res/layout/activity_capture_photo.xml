@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/black">
+    android:background="@drawable/fondoa4"
+    >
 
     <ImageView
         android:id="@+id/ivCapturedPhoto"
@@ -18,5 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Capturar Foto" />
+        android:text="Capturar Foto"
+        android:textStyle="bold"
+        android:backgroundTint="#00BCD4"/>
 </LinearLayout>

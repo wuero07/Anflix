@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@drawable/fondoa2">
+    android:background="@drawable/fondoantflix">
 
     <TextView
         android:id="@+id/welcomeMessage"
@@ -11,8 +11,8 @@
         android:layout_centerHorizontal="true"
         android:text="Bienvenido a Anflix"
         android:textSize="24sp"
-        android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textColor="#FA0101"
+        android:textStyle="italic" />
 
     <Button
         android:id="@+id/btnGoToMenu"
@@ -21,6 +21,19 @@
         android:layout_below="@id/welcomeMessage"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        android:backgroundTint="#FA0101"
         android:text="Ir al Menú" />
+
+    <Button
+        android:id="@+id/btnChangeUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnGoToMenu"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        android:backgroundTint="#FA0101"
+        android:text="Cambiar de Usuario"/>
 </RelativeLayout>
 

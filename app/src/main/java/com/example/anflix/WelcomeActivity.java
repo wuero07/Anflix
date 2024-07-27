@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -15,11 +14,12 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         Button btnGoToMenu = findViewById(R.id.btnGoToMenu);
-        btnGoToMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDataCaptureDialog();
-            }
+        btnGoToMenu.setOnClickListener(v -> showDataCaptureDialog());
+
+        Button btnChangeUser = findViewById(R.id.btnChangeUser);
+        btnChangeUser.setOnClickListener(v -> {
+            UserSelectionDialog dialog = new UserSelectionDialog();
+            dialog.show(getSupportFragmentManager(), "UserSelectionDialog");
         });
     }
 
@@ -28,4 +28,3 @@ public class WelcomeActivity extends AppCompatActivity {
         dialog.show(getSupportFragmentManager(), "DataCaptureDialog");
     }
 }
-

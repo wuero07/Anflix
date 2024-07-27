@@ -1,16 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/fondoa3">
+    android:background="@drawable/fondo3a">
 
     <EditText
         android:id="@+id/etName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:hint="Nombre"
-        android:textColor="@color/black"
         android:textStyle="bold"/>
 
     <EditText
@@ -18,8 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Edad"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:inputType="number"
-        android:textColor="@color/black"
         android:textStyle="bold"/>
 
     <RadioGroup
@@ -31,18 +34,24 @@
             android:id="@+id/rbMale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Masculino" />
+            android:text="Masculino"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"/>
 
         <RadioButton
             android:id="@+id/rbFemale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Femenino" />
+            android:text="Femenino"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"/>
+
     </RadioGroup>
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar" />
+        android:text="Guardar"
+        android:backgroundTint="@color/black"/>
 </LinearLayout>

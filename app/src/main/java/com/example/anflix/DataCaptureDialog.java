@@ -1,9 +1,8 @@
 package com.example.anflix;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,12 +33,7 @@ public class DataCaptureDialog extends DialogFragment {
         rgGender = view.findViewById(R.id.rgGender);
         btnSave = view.findViewById(R.id.btnSave);
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveData();
-            }
-        });
+        btnSave.setOnClickListener(v -> saveData());
 
         return view;
     }
@@ -61,8 +55,17 @@ public class DataCaptureDialog extends DialogFragment {
         RadioButton selectedGender = rgGender.findViewById(selectedGenderId);
         String gender = selectedGender.getText().toString();
 
-        UserRepository userRepository = new UserRepository(getContext());
-        userRepository.insertUser(name, age, gender);
+
+        String userKey = "user_" + System.currentTimeMillis();
+
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(userKey + "_name", name);
+        editor.putInt(userKey + "_age", age);
+        editor.putString(userKey + "_gender", gender);
+        editor.putString("current_user_key", userKey);
+        editor.apply();
 
         dismiss();
 
